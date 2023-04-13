@@ -2,7 +2,7 @@ import { DbUser } from "../../db/DbUser";
 import { BaseRequest, BaseResponse, BaseConf } from "../base";
 
 export interface ReqAdd extends BaseRequest {
-  user: Pick<DbUser,'age'| 'name'| 'role'>;
+  user: Omit<DbUser,'_id'| 'create'| 'update'>;
 }
 
 export interface ResAdd extends BaseResponse {

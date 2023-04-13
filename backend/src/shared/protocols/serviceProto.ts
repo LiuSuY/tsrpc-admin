@@ -7,6 +7,8 @@ import { ReqAdd as ReqAdd_1, ResAdd as ResAdd_1 } from './user/PtlAdd';
 import { ReqDel as ReqDel_1, ResDel as ResDel_1 } from './user/PtlDel';
 import { ReqEdit as ReqEdit_1, ResEdit as ResEdit_1 } from './user/PtlEdit';
 import { ReqGet as ReqGet_1, ResGet as ResGet_1 } from './user/PtlGet';
+import { ReqLogin, ResLogin } from './user/PtlLogin';
+import { ReqLogout, ResLogout } from './user/PtlLogout';
 
 export interface ServiceType {
     api: {
@@ -41,6 +43,14 @@ export interface ServiceType {
         "user/Get": {
             req: ReqGet_1,
             res: ResGet_1
+        },
+        "user/Login": {
+            req: ReqLogin,
+            res: ResLogin
+        },
+        "user/Logout": {
+            req: ReqLogout,
+            res: ResLogout
         }
     },
     msg: {
@@ -49,7 +59,7 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 4,
+    "version": 7,
     "services": [
         {
             "id": 6,
@@ -98,6 +108,18 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "name": "user/Get",
             "type": "api",
             "conf": {}
+        },
+        {
+            "id": 10,
+            "name": "user/Login",
+            "type": "api",
+            "conf": {}
+        },
+        {
+            "id": 11,
+            "name": "user/Logout",
+            "type": "api",
+            "conf": {}
         }
     ],
     "types": {
@@ -132,7 +154,17 @@ export const serviceProto: ServiceProto<ServiceType> = {
             ]
         },
         "base/BaseRequest": {
-            "type": "Interface"
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
+                    },
+                    "optional": true
+                }
+            ]
         },
         "../db/DbBook/DbBook": {
             "type": "Interface",
@@ -250,7 +282,17 @@ export const serviceProto: ServiceProto<ServiceType> = {
             ]
         },
         "base/BaseResponse": {
-            "type": "Interface"
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
+                    },
+                    "optional": true
+                }
+            ]
         },
         "book/PtlDel/ReqDel": {
             "type": "Interface",
@@ -432,11 +474,11 @@ export const serviceProto: ServiceProto<ServiceType> = {
                             "target": "../db/DbUser/DbUser"
                         },
                         "keys": [
-                            "age",
-                            "name",
-                            "role"
+                            "_id",
+                            "create",
+                            "update"
                         ],
-                        "type": "Pick"
+                        "type": "Omit"
                     }
                 }
             ]
@@ -453,8 +495,8 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     }
                 },
                 {
-                    "id": 1,
-                    "name": "name",
+                    "id": 6,
+                    "name": "username",
                     "type": {
                         "type": "String"
                     }
@@ -467,11 +509,30 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     }
                 },
                 {
-                    "id": 3,
-                    "name": "role",
+                    "id": 7,
+                    "name": "nickname",
+                    "type": {
+                        "type": "String"
+                    },
+                    "optional": true
+                },
+                {
+                    "id": 8,
+                    "name": "password",
                     "type": {
                         "type": "String"
                     }
+                },
+                {
+                    "id": 9,
+                    "name": "roles",
+                    "type": {
+                        "type": "Array",
+                        "elementType": {
+                            "type": "String"
+                        }
+                    },
+                    "optional": true
                 },
                 {
                     "id": 4,
@@ -627,7 +688,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                                 }
                             },
                             {
-                                "id": 1,
+                                "id": 2,
                                 "type": {
                                     "type": "Partial",
                                     "target": {
@@ -636,7 +697,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                                             "target": "../db/DbUser/DbUser"
                                         },
                                         "keys": [
-                                            "name",
+                                            "username",
                                             "age"
                                         ],
                                         "type": "Pick"
@@ -656,6 +717,15 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Reference",
                         "target": "base/BaseResponse"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "data",
+                    "type": {
+                        "type": "Any"
                     }
                 }
             ]
@@ -693,6 +763,117 @@ export const serviceProto: ServiceProto<ServiceType> = {
                             "type": "Reference",
                             "target": "../db/DbUser/DbUser"
                         }
+                    }
+                }
+            ]
+        },
+        "user/PtlLogin/ReqLogin": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "username",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "password",
+                    "type": {
+                        "type": "String"
+                    }
+                }
+            ]
+        },
+        "user/PtlLogin/ResLogin": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "__ssoToken",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "user",
+                    "type": {
+                        "type": "Reference",
+                        "target": "../models/CurrentUser/CurrentUser"
+                    }
+                }
+            ]
+        },
+        "../models/CurrentUser/CurrentUser": {
+            "type": "Interface",
+            "properties": [
+                {
+                    "id": 3,
+                    "name": "_id",
+                    "type": {
+                        "type": "Reference",
+                        "target": "?mongodb/ObjectId"
+                    }
+                },
+                {
+                    "id": 1,
+                    "name": "username",
+                    "type": {
+                        "type": "String"
+                    }
+                },
+                {
+                    "id": 2,
+                    "name": "roles",
+                    "type": {
+                        "type": "Array",
+                        "elementType": {
+                            "type": "String"
+                        }
+                    }
+                }
+            ]
+        },
+        "user/PtlLogout/ReqLogout": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ]
+        },
+        "user/PtlLogout/ResLogout": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
                     }
                 }
             ]
