@@ -1,48 +1,18 @@
 import { ServiceProto } from 'tsrpc-proto';
-import { ReqAdd, ResAdd } from './book/PtlAdd';
-import { ReqDel, ResDel } from './book/PtlDel';
-import { ReqEdit, ResEdit } from './book/PtlEdit';
-import { ReqGet, ResGet } from './book/PtlGet';
-import { ReqAdd as ReqAdd_1, ResAdd as ResAdd_1 } from './user/PtlAdd';
-import { ReqDel as ReqDel_1, ResDel as ResDel_1 } from './user/PtlDel';
-import { ReqEdit as ReqEdit_1, ResEdit as ResEdit_1 } from './user/PtlEdit';
-import { ReqGet as ReqGet_1, ResGet as ResGet_1 } from './user/PtlGet';
+import { ReqGet, ResGet } from './recordLog/PtlGet';
+import { ReqSave, ResSave } from './recordLog/PtlSave';
 import { ReqLogin, ResLogin } from './user/PtlLogin';
 import { ReqLogout, ResLogout } from './user/PtlLogout';
 
 export interface ServiceType {
     api: {
-        "book/Add": {
-            req: ReqAdd,
-            res: ResAdd
-        },
-        "book/Del": {
-            req: ReqDel,
-            res: ResDel
-        },
-        "book/Edit": {
-            req: ReqEdit,
-            res: ResEdit
-        },
-        "book/Get": {
+        "recordLog/Get": {
             req: ReqGet,
             res: ResGet
         },
-        "user/Add": {
-            req: ReqAdd_1,
-            res: ResAdd_1
-        },
-        "user/Del": {
-            req: ReqDel_1,
-            res: ResDel_1
-        },
-        "user/Edit": {
-            req: ReqEdit_1,
-            res: ResEdit_1
-        },
-        "user/Get": {
-            req: ReqGet_1,
-            res: ResGet_1
+        "recordLog/Save": {
+            req: ReqSave,
+            res: ResSave
         },
         "user/Login": {
             req: ReqLogin,
@@ -59,53 +29,17 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 7,
+    "version": 9,
     "services": [
         {
-            "id": 6,
-            "name": "book/Add",
+            "id": 14,
+            "name": "recordLog/Get",
             "type": "api",
             "conf": {}
         },
         {
-            "id": 7,
-            "name": "book/Del",
-            "type": "api",
-            "conf": {}
-        },
-        {
-            "id": 8,
-            "name": "book/Edit",
-            "type": "api",
-            "conf": {}
-        },
-        {
-            "id": 9,
-            "name": "book/Get",
-            "type": "api",
-            "conf": {}
-        },
-        {
-            "id": 2,
-            "name": "user/Add",
-            "type": "api",
-            "conf": {}
-        },
-        {
-            "id": 3,
-            "name": "user/Del",
-            "type": "api",
-            "conf": {}
-        },
-        {
-            "id": 4,
-            "name": "user/Edit",
-            "type": "api",
-            "conf": {}
-        },
-        {
-            "id": 5,
-            "name": "user/Get",
+            "id": 15,
+            "name": "recordLog/Save",
             "type": "api",
             "conf": {}
         },
@@ -123,7 +57,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
         }
     ],
     "types": {
-        "book/PtlAdd/ReqAdd": {
+        "recordLog/PtlGet/ReqGet": {
             "type": "Interface",
             "extends": [
                 {
@@ -131,24 +65,6 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Reference",
                         "target": "base/BaseRequest"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "book",
-                    "type": {
-                        "target": {
-                            "type": "Reference",
-                            "target": "../db/DbBook/DbBook"
-                        },
-                        "keys": [
-                            "title",
-                            "author",
-                            "price"
-                        ],
-                        "type": "Pick"
                     }
                 }
             ]
@@ -166,96 +82,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 }
             ]
         },
-        "../db/DbBook/DbBook": {
-            "type": "Interface",
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "_id",
-                    "type": {
-                        "type": "Reference",
-                        "target": "?mongodb/ObjectId"
-                    }
-                },
-                {
-                    "id": 1,
-                    "name": "title",
-                    "type": {
-                        "type": "String"
-                    }
-                },
-                {
-                    "id": 2,
-                    "name": "author",
-                    "type": {
-                        "type": "String"
-                    }
-                },
-                {
-                    "id": 3,
-                    "name": "price",
-                    "type": {
-                        "type": "Number"
-                    }
-                },
-                {
-                    "id": 4,
-                    "name": "total",
-                    "type": {
-                        "type": "Number"
-                    },
-                    "optional": true
-                },
-                {
-                    "id": 5,
-                    "name": "create",
-                    "type": {
-                        "type": "Interface",
-                        "properties": [
-                            {
-                                "id": 0,
-                                "name": "time",
-                                "type": {
-                                    "type": "Date"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "uid",
-                                "type": {
-                                    "type": "String"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "id": 6,
-                    "name": "update",
-                    "type": {
-                        "type": "Interface",
-                        "properties": [
-                            {
-                                "id": 0,
-                                "name": "time",
-                                "type": {
-                                    "type": "Date"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "uid",
-                                "type": {
-                                    "type": "String"
-                                }
-                            }
-                        ]
-                    },
-                    "optional": true
-                }
-            ]
-        },
-        "book/PtlAdd/ResAdd": {
+        "recordLog/PtlGet/ResGet": {
             "type": "Interface",
             "extends": [
                 {
@@ -269,13 +96,12 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "properties": [
                 {
                     "id": 0,
-                    "name": "_id",
+                    "name": "records",
                     "type": {
-                        "type": "IndexedAccess",
-                        "index": "_id",
-                        "objectType": {
+                        "type": "Array",
+                        "elementType": {
                             "type": "Reference",
-                            "target": "../db/DbBook/DbBook"
+                            "target": "../db/DbRecordLog/DbRecordLog"
                         }
                     }
                 }
@@ -294,196 +120,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 }
             ]
         },
-        "book/PtlDel/ReqDel": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseRequest"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "_id",
-                    "type": {
-                        "type": "IndexedAccess",
-                        "index": "_id",
-                        "objectType": {
-                            "type": "Reference",
-                            "target": "../db/DbBook/DbBook"
-                        }
-                    }
-                }
-            ]
-        },
-        "book/PtlDel/ResDel": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "deletedCount",
-                    "type": {
-                        "type": "Number"
-                    }
-                }
-            ]
-        },
-        "book/PtlEdit/ReqEdit": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseRequest"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "book",
-                    "type": {
-                        "type": "Intersection",
-                        "members": [
-                            {
-                                "id": 0,
-                                "type": {
-                                    "target": {
-                                        "type": "Reference",
-                                        "target": "../db/DbBook/DbBook"
-                                    },
-                                    "keys": [
-                                        "_id"
-                                    ],
-                                    "type": "Pick"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "type": {
-                                    "type": "Partial",
-                                    "target": {
-                                        "target": {
-                                            "type": "Reference",
-                                            "target": "../db/DbBook/DbBook"
-                                        },
-                                        "keys": [
-                                            "author",
-                                            "price",
-                                            "title"
-                                        ],
-                                        "type": "Pick"
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "book/PtlEdit/ResEdit": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "msg",
-                    "type": {
-                        "type": "String"
-                    }
-                }
-            ]
-        },
-        "book/PtlGet/ReqGet": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseRequest"
-                    }
-                }
-            ]
-        },
-        "book/PtlGet/ResGet": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "books",
-                    "type": {
-                        "type": "Array",
-                        "elementType": {
-                            "type": "Reference",
-                            "target": "../db/DbBook/DbBook"
-                        }
-                    }
-                }
-            ]
-        },
-        "user/PtlAdd/ReqAdd": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseRequest"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "user",
-                    "type": {
-                        "target": {
-                            "type": "Reference",
-                            "target": "../db/DbUser/DbUser"
-                        },
-                        "keys": [
-                            "_id",
-                            "create",
-                            "update"
-                        ],
-                        "type": "Omit"
-                    }
-                }
-            ]
-        },
-        "../db/DbUser/DbUser": {
+        "../db/DbRecordLog/DbRecordLog": {
             "type": "Interface",
             "properties": [
                 {
@@ -492,124 +129,34 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Reference",
                         "target": "?mongodb/ObjectId"
-                    }
+                    },
+                    "optional": true
                 },
                 {
-                    "id": 6,
-                    "name": "username",
+                    "id": 1,
+                    "name": "title",
                     "type": {
                         "type": "String"
                     }
                 },
                 {
                     "id": 2,
-                    "name": "age",
+                    "name": "startTime",
                     "type": {
-                        "type": "Number"
+                        "type": "Date"
                     }
                 },
                 {
-                    "id": 7,
-                    "name": "nickname",
+                    "id": 3,
+                    "name": "endTime",
                     "type": {
-                        "type": "String"
-                    },
-                    "optional": true
-                },
-                {
-                    "id": 8,
-                    "name": "password",
-                    "type": {
-                        "type": "String"
-                    }
-                },
-                {
-                    "id": 9,
-                    "name": "roles",
-                    "type": {
-                        "type": "Array",
-                        "elementType": {
-                            "type": "String"
-                        }
-                    },
-                    "optional": true
-                },
-                {
-                    "id": 4,
-                    "name": "create",
-                    "type": {
-                        "type": "Interface",
-                        "properties": [
-                            {
-                                "id": 0,
-                                "name": "time",
-                                "type": {
-                                    "type": "Date"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "uid",
-                                "type": {
-                                    "type": "String"
-                                }
-                            }
-                        ]
-                    }
-                },
-                {
-                    "id": 5,
-                    "name": "update",
-                    "type": {
-                        "type": "Interface",
-                        "properties": [
-                            {
-                                "id": 0,
-                                "name": "time",
-                                "type": {
-                                    "type": "Date"
-                                }
-                            },
-                            {
-                                "id": 1,
-                                "name": "uid",
-                                "type": {
-                                    "type": "String"
-                                }
-                            }
-                        ]
+                        "type": "Date"
                     },
                     "optional": true
                 }
             ]
         },
-        "user/PtlAdd/ResAdd": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "_id",
-                    "type": {
-                        "type": "IndexedAccess",
-                        "index": "_id",
-                        "objectType": {
-                            "type": "Reference",
-                            "target": "../db/DbUser/DbUser"
-                        }
-                    }
-                }
-            ]
-        },
-        "user/PtlDel/ReqDel": {
+        "recordLog/PtlSave/ReqSave": {
             "type": "Interface",
             "extends": [
                 {
@@ -623,19 +170,22 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "properties": [
                 {
                     "id": 0,
-                    "name": "_id",
+                    "name": "recordLog",
                     "type": {
-                        "type": "IndexedAccess",
-                        "index": "_id",
-                        "objectType": {
+                        "target": {
                             "type": "Reference",
-                            "target": "../db/DbUser/DbUser"
-                        }
+                            "target": "../db/DbRecordLog/DbRecordLog"
+                        },
+                        "keys": [
+                            "_id",
+                            "endTime"
+                        ],
+                        "type": "Omit"
                     }
                 }
             ]
         },
-        "user/PtlDel/ResDel": {
+        "recordLog/PtlSave/ResSave": {
             "type": "Interface",
             "extends": [
                 {
@@ -643,126 +193,6 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Reference",
                         "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "deletedCount",
-                    "type": {
-                        "type": "Number"
-                    }
-                }
-            ]
-        },
-        "user/PtlEdit/ReqEdit": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseRequest"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "user",
-                    "type": {
-                        "type": "Intersection",
-                        "members": [
-                            {
-                                "id": 0,
-                                "type": {
-                                    "target": {
-                                        "type": "Reference",
-                                        "target": "../db/DbUser/DbUser"
-                                    },
-                                    "keys": [
-                                        "_id"
-                                    ],
-                                    "type": "Pick"
-                                }
-                            },
-                            {
-                                "id": 2,
-                                "type": {
-                                    "type": "Partial",
-                                    "target": {
-                                        "target": {
-                                            "type": "Reference",
-                                            "target": "../db/DbUser/DbUser"
-                                        },
-                                        "keys": [
-                                            "username",
-                                            "age"
-                                        ],
-                                        "type": "Pick"
-                                    }
-                                }
-                            }
-                        ]
-                    }
-                }
-            ]
-        },
-        "user/PtlEdit/ResEdit": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "data",
-                    "type": {
-                        "type": "Any"
-                    }
-                }
-            ]
-        },
-        "user/PtlGet/ReqGet": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseRequest"
-                    }
-                }
-            ]
-        },
-        "user/PtlGet/ResGet": {
-            "type": "Interface",
-            "extends": [
-                {
-                    "id": 0,
-                    "type": {
-                        "type": "Reference",
-                        "target": "base/BaseResponse"
-                    }
-                }
-            ],
-            "properties": [
-                {
-                    "id": 0,
-                    "name": "users",
-                    "type": {
-                        "type": "Array",
-                        "elementType": {
-                            "type": "Reference",
-                            "target": "../db/DbUser/DbUser"
-                        }
                     }
                 }
             ]

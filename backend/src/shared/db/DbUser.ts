@@ -1,19 +1,22 @@
 import { ObjectId } from "mongodb";
 
 export interface DbUser {
-  _id: ObjectId;
-  username: string;
-  age: number;
-  nickname?: string;
-  password: string;
-  roles?: Array<string>;
-  create: {
-    time: Date;
-    uid: string;
-  };
-
-  update?: {
-    time: Date;
-    uid: string;
-  };
+  id: string,
+  userUuid: string,
+  userName: string,
+  passWord: string,
+  realName: string,
+  age: number,
+  sex: number,
+  birthDay: Date,
+  userLevel: number,
+  phone: string,
+  role: number,
+  status: number,
+  imagePath: string,
+  createTime: Date,
+  modifyTime: Date,
+  lastActiveTime: Date,
+  deleted: boolean,
+  wxOpenId: string
 }
