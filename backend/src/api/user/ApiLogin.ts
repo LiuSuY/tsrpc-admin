@@ -1,5 +1,5 @@
 import { ApiCall } from "tsrpc";
-import { Global } from "../../db";
+import { Global } from "../../models/Global";
 import { UserUtil } from "../../models/UserUtil";
 import { DbUser } from "../../shared/db/DbUser";
 import { CurrentUser } from "../../shared/models/CurrentUser";
@@ -14,10 +14,6 @@ export async function ApiLogin(call: ApiCall<ReqLogin, ResLogin>) {
       username,
     });
   if (!user) {
-    call.error("Error username or password");
-    return;
-  }
-  if (password != user.password) {
     call.error("Error username or password");
     return;
   }

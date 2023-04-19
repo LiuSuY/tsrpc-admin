@@ -1,6 +1,7 @@
 import { ServiceProto } from 'tsrpc-proto';
 import { ReqGet, ResGet } from './recordLog/PtlGet';
 import { ReqSave, ResSave } from './recordLog/PtlSave';
+import { ReqUpdate, ResUpdate } from './recordLog/PtlUpdate';
 import { ReqLogin, ResLogin } from './user/PtlLogin';
 import { ReqLogout, ResLogout } from './user/PtlLogout';
 
@@ -13,6 +14,10 @@ export interface ServiceType {
         "recordLog/Save": {
             req: ReqSave,
             res: ResSave
+        },
+        "recordLog/Update": {
+            req: ReqUpdate,
+            res: ResUpdate
         },
         "user/Login": {
             req: ReqLogin,
@@ -29,7 +34,7 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 9,
+    "version": 11,
     "services": [
         {
             "id": 14,
@@ -40,6 +45,12 @@ export const serviceProto: ServiceProto<ServiceType> = {
         {
             "id": 15,
             "name": "recordLog/Save",
+            "type": "api",
+            "conf": {}
+        },
+        {
+            "id": 16,
+            "name": "recordLog/Update",
             "type": "api",
             "conf": {}
         },
@@ -129,8 +140,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Reference",
                         "target": "?mongodb/ObjectId"
-                    },
-                    "optional": true
+                    }
                 },
                 {
                     "id": 1,
@@ -151,8 +161,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "name": "endTime",
                     "type": {
                         "type": "Date"
-                    },
-                    "optional": true
+                    }
                 }
             ]
         },
@@ -177,15 +186,57 @@ export const serviceProto: ServiceProto<ServiceType> = {
                             "target": "../db/DbRecordLog/DbRecordLog"
                         },
                         "keys": [
-                            "_id",
-                            "endTime"
+                            "startTime",
+                            "title"
                         ],
-                        "type": "Omit"
+                        "type": "Pick"
                     }
                 }
             ]
         },
         "recordLog/PtlSave/ResSave": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseResponse"
+                    }
+                }
+            ]
+        },
+        "recordLog/PtlUpdate/ReqUpdate": {
+            "type": "Interface",
+            "extends": [
+                {
+                    "id": 0,
+                    "type": {
+                        "type": "Reference",
+                        "target": "base/BaseRequest"
+                    }
+                }
+            ],
+            "properties": [
+                {
+                    "id": 0,
+                    "name": "recordLog",
+                    "type": {
+                        "type": "Interface",
+                        "properties": [
+                            {
+                                "id": 0,
+                                "name": "_id",
+                                "type": {
+                                    "type": "String"
+                                }
+                            }
+                        ]
+                    }
+                }
+            ]
+        },
+        "recordLog/PtlUpdate/ResUpdate": {
             "type": "Interface",
             "extends": [
                 {
@@ -258,8 +309,8 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "Interface",
             "properties": [
                 {
-                    "id": 3,
-                    "name": "_id",
+                    "id": 4,
+                    "name": "uid",
                     "type": {
                         "type": "Reference",
                         "target": "?mongodb/ObjectId"

@@ -19,22 +19,31 @@ const App = () => {
         handleGetRecordLog();
     }, []);
     const handleStart = () => {
-        if (title) {
-            client.callApi('recordLog/Save', {
-                recordLog: {
-                    title,
-                    startTime: new Date
-                }
-            }).then((res) => {
-                if (res.isSucc) {
-                    message.success('保存成功');
-                    handleGetRecordLog();
-                }
-            })
-        } else {
-            message.error('标题不能为空');
-        }
-
+        client.callApi('recordLog/Save', {
+            recordLog: {
+                title,
+                startTime: new Date,
+            }
+        }).then((res) => {
+            if (res.isSucc) {
+                message.success('签到成功');
+                handleGetRecordLog();
+            }else {
+                message.error(res.err.message)
+            }
+        })
+    };
+    const handleStop = () => {
+        client.callApi('recordLog/Update', {
+            recordLog: {
+                _id: recordLog![0]._id
+            }
+        }).then(res => {
+            if (res.isSucc) {
+                message.success('签退成功');
+                handleGetRecordLog();
+            }
+        })
     }
 
     return (<div>
@@ -53,7 +62,8 @@ const App = () => {
                 <Input placeholder="请输入学习标题" value={title} onChange={(e) => setTitle(e.target.value)}></Input>
             </FormItem>
             <FormItem>
-                <Button type="primary" onClick={handleStart}>开始学习</Button>
+                <Button type="primary" onClick={handleStart}>签到</Button>
+                <Button type="primary" onClick={handleStop}>签退</Button>
             </FormItem>
         </Form>
     </div>)

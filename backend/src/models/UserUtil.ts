@@ -1,6 +1,6 @@
 import { ObjectId } from "mongodb";
 import * as uuid from "uuid";
-import { Global } from "../db";
+import { Global } from "./Global";
 import { DbUser } from "../shared/db/DbUser";
 import { CurrentUser } from "../shared/models/CurrentUser";
 
@@ -11,17 +11,17 @@ export class UserUtil {
   // You can store data into database
 
   static ssoTokenInfo: {
-    [token: string]: { expiredTime: number; _id: ObjectId };
+    [token: string]: { expiredTime: number; uid: ObjectId };
   } = {};
 
-  static async createSsoToken(_id: ObjectId): Promise<string> {
-    console.log(_id)
+  static async createSsoToken(uid: ObjectId): Promise<string> {
+    console.log(uid)
     let token = uuid.v1();
     // Expired after some time without any action
     let expiredTime = Date.now() + SSO_VALID_TIME;
 
     this.ssoTokenInfo[token] = {
-      _id,
+      uid,
       expiredTime,
     };
 
@@ -43,7 +43,7 @@ export class UserUtil {
     let user = await Global.db
     .collection<DbUser & CurrentUser>("User")
     .findOne({
-      _id: info._id,
+      _id: info.uid,
     });
     if (!user) {
       return undefined;
@@ -54,7 +54,7 @@ export class UserUtil {
 
     // Return parsed CurrentUser
     return {
-      _id: user._id,
+      uid: user._id,
       username: user.username,
       roles: user.roles,
     };

@@ -1,6 +1,6 @@
 import * as path from "path";
 import { HttpServer } from "tsrpc";
-import { Global } from "./db";
+import { Global } from "./models/Global";
 import { enableAuthentication } from "./models/enableAuthentication";
 import { parseCurrentUser } from "./models/parseCurrentUser";
 import { serviceProto } from "./shared/protocols/serviceProto";

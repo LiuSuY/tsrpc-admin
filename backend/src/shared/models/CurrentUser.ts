@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 
 export interface CurrentUser {
-    _id: ObjectId,
+    uid: ObjectId,
     username: string,
     roles: string[]
 }
