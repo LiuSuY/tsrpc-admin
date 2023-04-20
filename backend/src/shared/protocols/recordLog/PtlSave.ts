@@ -7,4 +7,6 @@ export interface ReqSave extends BaseRequest {
 
 export interface ResSave extends BaseResponse {}
 
-export const conf: BaseConf = {};
+export const conf: BaseConf = {
+  needLogin: true,
+};

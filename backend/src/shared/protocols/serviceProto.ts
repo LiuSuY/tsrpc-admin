@@ -34,25 +34,31 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 11,
+    "version": 12,
     "services": [
         {
             "id": 14,
             "name": "recordLog/Get",
             "type": "api",
-            "conf": {}
+            "conf": {
+                "needLogin": true
+            }
         },
         {
             "id": 15,
             "name": "recordLog/Save",
             "type": "api",
-            "conf": {}
+            "conf": {
+                "needLogin": true
+            }
         },
         {
             "id": 16,
             "name": "recordLog/Update",
             "type": "api",
-            "conf": {}
+            "conf": {
+                "needLogin": true
+            }
         },
         {
             "id": 10,
@@ -111,8 +117,38 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "type": "Array",
                         "elementType": {
-                            "type": "Reference",
-                            "target": "../db/DbRecordLog/DbRecordLog"
+                            "type": "Intersection",
+                            "members": [
+                                {
+                                    "id": 0,
+                                    "type": {
+                                        "type": "Partial",
+                                        "target": {
+                                            "target": {
+                                                "type": "Reference",
+                                                "target": "../db/DbRecordLog/DbRecordLog"
+                                            },
+                                            "keys": [
+                                                "endTime"
+                                            ],
+                                            "type": "Pick"
+                                        }
+                                    }
+                                },
+                                {
+                                    "id": 1,
+                                    "type": {
+                                        "target": {
+                                            "type": "Reference",
+                                            "target": "../db/DbRecordLog/DbRecordLog"
+                                        },
+                                        "keys": [
+                                            "endTime"
+                                        ],
+                                        "type": "Omit"
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -261,15 +297,15 @@ export const serviceProto: ServiceProto<ServiceType> = {
             ],
             "properties": [
                 {
-                    "id": 0,
-                    "name": "username",
+                    "id": 2,
+                    "name": "userName",
                     "type": {
                         "type": "String"
                     }
                 },
                 {
-                    "id": 1,
-                    "name": "password",
+                    "id": 3,
+                    "name": "passWord",
                     "type": {
                         "type": "String"
                     }

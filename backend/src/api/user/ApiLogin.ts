@@ -2,17 +2,18 @@ import { ApiCall } from "tsrpc";
 import { Global } from "../../models/Global";
 import { UserUtil } from "../../models/UserUtil";
 import { DbUser } from "../../shared/db/DbUser";
-import { CurrentUser } from "../../shared/models/CurrentUser";
 import { ReqLogin, ResLogin } from "../../shared/protocols/user/PtlLogin";
 
 export async function ApiLogin(call: ApiCall<ReqLogin, ResLogin>) {
-  const { username, password } = call.req;
- 
-  const user = await Global.db
-    .collection<DbUser & CurrentUser>("User")
-    .findOne({
-      username,
-    });
+  const { userName, passWord } = call.req;
+  if (!userName || !passWord) {
+    call.error("Error username or password is empty");
+    return;
+  }
+  const user = await Global.db.collection<DbUser>("User").findOne({
+    userName,
+    passWord,
+  });
   if (!user) {
     call.error("Error username or password");
     return;
@@ -21,6 +22,10 @@ export async function ApiLogin(call: ApiCall<ReqLogin, ResLogin>) {
   let sso = await UserUtil.createSsoToken(user._id);
   call.succ({
     __ssoToken: sso,
-    user: user,
+    user: {
+      uid: user._id,
+      username: user.userName,
+      roles: [user.role],
+    },
   });
 }

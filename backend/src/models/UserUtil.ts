@@ -15,7 +15,6 @@ export class UserUtil {
   } = {};
 
   static async createSsoToken(uid: ObjectId): Promise<string> {
-    console.log(uid)
     let token = uuid.v1();
     // Expired after some time without any action
     let expiredTime = Date.now() + SSO_VALID_TIME;
@@ -55,8 +54,8 @@ export class UserUtil {
     // Return parsed CurrentUser
     return {
       uid: user._id,
-      username: user.username,
-      roles: user.roles,
+      username: user.userName,
+      roles: [user.role],
     };
   }
 }

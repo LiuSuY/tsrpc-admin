@@ -6,14 +6,19 @@ import { DbRecordLog } from "./shared/db/DbRecordLog";
 
 
 const App = () => {
-    const [recordLog, setRecordLog] = useState<DbRecordLog[]>();
+    const [recordLog, setRecordLog] = useState<Array<Partial<Pick<DbRecordLog, 'endTime'>> & Omit<DbRecordLog, 'endTime'>>>();
     const [title, setTitle] = useState<string>('');
+    const [form] = Form.useForm();
     const handleGetRecordLog = () => {
-        client.callApi('recordLog/Get', {}).then((res) => {
-            if (res.isSucc) {
-                setRecordLog(res.res.records)
-            }
-        })
+        if (window.localStorage.getItem('SSO_TOKEN')) {
+            client.callApi('recordLog/Get', {}).then((res) => {
+                if (res.isSucc) {
+                    setRecordLog(res.res.records)
+                } else {
+                    message.error(res.err.message)
+                }
+            })
+        }
     }
     useEffect(() => {
         handleGetRecordLog();
@@ -28,7 +33,7 @@ const App = () => {
             if (res.isSucc) {
                 message.success('签到成功');
                 handleGetRecordLog();
-            }else {
+            } else {
                 message.error(res.err.message)
             }
         })
@@ -42,13 +47,68 @@ const App = () => {
             if (res.isSucc) {
                 message.success('签退成功');
                 handleGetRecordLog();
+            } else {
+                message.error(res.err.message)
             }
         })
     }
 
+    const handleLogin = () => {
+        form.validateFields().then(values => {
+            if (values) {
+                const { username: userName, password: passWord } = values;
+                client.callApi('user/Login', {
+                    userName,
+                    passWord
+                }).then((res) => {
+                    if (res.isSucc) {
+                        message.success('登录成功');
+                        handleGetRecordLog();
+                    } else {
+                        message.error(res.err.message)
+                    }
+                })
+            }
+        })
+
+    }
+
+
+    const handleLogout = () => {
+        client.callApi('user/Logout', {}).then((res) => {
+            if (res.isSucc) {
+                message.success('退出成功');
+                handleGetRecordLog();
+            } else {
+                message.error(res.err.message)
+            }
+        })
+    }
+
+    const handleReset = () => {
+        form.resetFields();
+    }
+
     return (<div>
+        <Form
+            form={form}
+            autoComplete="off" className="text-center m-4">
+            <FormItem label="Username"
+                name="username"
+                rules={[{ required: true, message: 'Please input your username!' }]}>
+                <Input ></Input>
+            </FormItem>
+            <FormItem label="password" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+                <Input.Password></Input.Password>
+            </FormItem>
+            <FormItem>
+                <Button type="primary" onClick={handleLogin}>登录</Button>
+                <Button type="primary" onClick={handleReset}>reset</Button>
+                <Button type="primary" onClick={handleLogout}>退出</Button>
+            </FormItem>
+        </Form>
         <div className="text-center pt-10">学习记录</div>
-        <div className="p-4">
+        <div className="p-4 h-40 overflow-auto">
             {recordLog && recordLog.map((item) => {
                 return <div key={item._id}>
                     <div className=" mt-4 mb-4"><span>学习标题:</span><span>{item.title}</span></div>
@@ -57,11 +117,13 @@ const App = () => {
                 </div>
             })}
         </div>
-        <Form>
+
+        <Form className="text-center m-4">
             <FormItem label="学习标题">
                 <Input placeholder="请输入学习标题" value={title} onChange={(e) => setTitle(e.target.value)}></Input>
             </FormItem>
             <FormItem>
+
                 <Button type="primary" onClick={handleStart}>签到</Button>
                 <Button type="primary" onClick={handleStop}>签退</Button>
             </FormItem>

@@ -1,17 +1,17 @@
 import { ObjectId } from "mongodb";
 
 export interface DbUser {
-  id: string,
-  userUuid: string,
+  _id: ObjectId,
+  userUuid: ObjectId,
   userName: string,
   passWord: string,
   realName: string,
   age: number,
-  sex: number,
-  birthDay: Date,
+  sex: string,
+  birthDay: string,
   userLevel: number,
   phone: string,
-  role: number,
+  role: string,
   status: number,
   imagePath: string,
   createTime: Date,

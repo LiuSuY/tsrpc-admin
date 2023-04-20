@@ -4,8 +4,8 @@ import { BaseConf } from "../shared/protocols/base";
 export function enableAuthentication(server: HttpServer) {
     server.flows.preApiCallFlow.push(call => {
         let conf: BaseConf | undefined = call.service.conf;
-
         // NeedLogin
+        console.log(call.currentUser)
         if (conf?.needLogin && !call.currentUser) {
             call.error('You need login before do this', { code: 'NEED_LOGIN' });
             return undefined;
