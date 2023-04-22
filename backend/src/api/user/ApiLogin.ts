@@ -1,8 +1,9 @@
+import { ObjectId } from "mongodb";
 import { ApiCall } from "tsrpc";
-import { Global } from "../../models/Global";
-import { UserUtil } from "../../models/UserUtil";
-import { DbUser } from "../../shared/db/DbUser";
+import { Global } from "../../Global";
+import { User } from "../../shared/models/User";
 import { ReqLogin, ResLogin } from "../../shared/protocols/user/PtlLogin";
+import { UserUtil } from "../../utils/UserUtil";
 
 export async function ApiLogin(call: ApiCall<ReqLogin, ResLogin>) {
   const { userName, passWord } = call.req;
@@ -10,7 +11,7 @@ export async function ApiLogin(call: ApiCall<ReqLogin, ResLogin>) {
     call.error("Error username or password is empty");
     return;
   }
-  const user = await Global.db.collection<DbUser>("User").findOne({
+  const user = await Global.db.collection<User>("User").findOne({
     userName,
     passWord,
   });
@@ -19,12 +20,12 @@ export async function ApiLogin(call: ApiCall<ReqLogin, ResLogin>) {
     return;
   }
 
-  let sso = await UserUtil.createSsoToken(user._id);
+  let sso = await UserUtil.createSsoToken(new ObjectId(user._id));
   call.succ({
     __ssoToken: sso,
     user: {
-      uid: user._id,
-      username: user.userName,
+      uid: user._id.toString(),
+      userName: user.userName,
       roles: [user.role],
     },
   });

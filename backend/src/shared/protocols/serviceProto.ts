@@ -34,10 +34,9 @@ export interface ServiceType {
 }
 
 export const serviceProto: ServiceProto<ServiceType> = {
-    "version": 12,
     "services": [
         {
-            "id": 14,
+            "id": 0,
             "name": "recordLog/Get",
             "type": "api",
             "conf": {
@@ -45,7 +44,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
             }
         },
         {
-            "id": 15,
+            "id": 1,
             "name": "recordLog/Save",
             "type": "api",
             "conf": {
@@ -53,7 +52,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
             }
         },
         {
-            "id": 16,
+            "id": 2,
             "name": "recordLog/Update",
             "type": "api",
             "conf": {
@@ -61,13 +60,13 @@ export const serviceProto: ServiceProto<ServiceType> = {
             }
         },
         {
-            "id": 10,
+            "id": 3,
             "name": "user/Login",
             "type": "api",
             "conf": {}
         },
         {
-            "id": 11,
+            "id": 4,
             "name": "user/Logout",
             "type": "api",
             "conf": {}
@@ -126,7 +125,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                                         "target": {
                                             "target": {
                                                 "type": "Reference",
-                                                "target": "../db/DbRecordLog/DbRecordLog"
+                                                "target": "../models/RecordLog/RecordLog"
                                             },
                                             "keys": [
                                                 "endTime"
@@ -140,7 +139,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                                     "type": {
                                         "target": {
                                             "type": "Reference",
-                                            "target": "../db/DbRecordLog/DbRecordLog"
+                                            "target": "../models/RecordLog/RecordLog"
                                         },
                                         "keys": [
                                             "endTime"
@@ -167,7 +166,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                 }
             ]
         },
-        "../db/DbRecordLog/DbRecordLog": {
+        "../models/RecordLog/RecordLog": {
             "type": "Interface",
             "properties": [
                 {
@@ -219,7 +218,7 @@ export const serviceProto: ServiceProto<ServiceType> = {
                     "type": {
                         "target": {
                             "type": "Reference",
-                            "target": "../db/DbRecordLog/DbRecordLog"
+                            "target": "../models/RecordLog/RecordLog"
                         },
                         "keys": [
                             "startTime",
@@ -297,14 +296,14 @@ export const serviceProto: ServiceProto<ServiceType> = {
             ],
             "properties": [
                 {
-                    "id": 2,
+                    "id": 0,
                     "name": "userName",
                     "type": {
                         "type": "String"
                     }
                 },
                 {
-                    "id": 3,
+                    "id": 1,
                     "name": "passWord",
                     "type": {
                         "type": "String"
@@ -345,16 +344,15 @@ export const serviceProto: ServiceProto<ServiceType> = {
             "type": "Interface",
             "properties": [
                 {
-                    "id": 4,
+                    "id": 0,
                     "name": "uid",
                     "type": {
-                        "type": "Reference",
-                        "target": "?mongodb/ObjectId"
+                        "type": "String"
                     }
                 },
                 {
                     "id": 1,
-                    "name": "username",
+                    "name": "userName",
                     "type": {
                         "type": "String"
                     }

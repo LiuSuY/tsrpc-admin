@@ -1,4 +1,3 @@
-import { DbRecordLog } from "../../db/DbRecordLog";
 import { BaseRequest, BaseResponse, BaseConf } from "../base";
 
 export interface ReqUpdate extends BaseRequest {

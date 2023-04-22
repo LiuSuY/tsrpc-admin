@@ -2,11 +2,11 @@ import { Button, Form, Input, message } from "antd";
 import FormItem from "antd/es/form/FormItem";
 import { useEffect, useState } from "react";
 import { client } from "./client";
-import { DbRecordLog } from "./shared/db/DbRecordLog";
+import { RecordLog } from "./shared/models/RecordLog";
 
 
 const App = () => {
-    const [recordLog, setRecordLog] = useState<Array<Partial<Pick<DbRecordLog, 'endTime'>> & Omit<DbRecordLog, 'endTime'>>>();
+    const [recordLog, setRecordLog] = useState<Array<Partial<Pick<RecordLog, 'endTime'>> & Omit<RecordLog, 'endTime'>>>();
     const [title, setTitle] = useState<string>('');
     const [form] = Form.useForm();
     const handleGetRecordLog = () => {

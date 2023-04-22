@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import { ApiCall } from "tsrpc";
-import { Global } from "../../models/Global";
-import { DbRecordLog } from "../../shared/db/DbRecordLog";
+import { Global } from "../../Global";
+import { RecordLog } from "../../shared/models/RecordLog";
 import {
   ReqUpdate,
   ResUpdate,
@@ -13,7 +13,7 @@ export default async function (call: ApiCall<ReqUpdate, ResUpdate>) {
     call.error("_id is empty");
     return;
   }
-  let rs = await Global.db.collection<DbRecordLog>("RecordLog").updateOne(
+  let rs = await Global.db.collection<RecordLog>("RecordLog").updateOne(
     { _id: new ObjectId(_id) },
     {
       $set: {

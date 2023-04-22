@@ -1,7 +1,5 @@
-import { ObjectId } from "mongodb";
-
 export interface CurrentUser {
-    uid: ObjectId,
-    username: string,
+    uid: string,
+    userName: string,
     roles: string[]
 }

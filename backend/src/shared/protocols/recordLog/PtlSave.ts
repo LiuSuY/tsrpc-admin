@@ -1,8 +1,8 @@
-import { DbRecordLog } from "../../db/DbRecordLog";
+import { RecordLog } from "../../models/RecordLog";
 import { BaseRequest, BaseResponse, BaseConf } from "../base";
 
 export interface ReqSave extends BaseRequest {
-  recordLog: Pick<DbRecordLog, "startTime" | "title">;
+  recordLog: Pick<RecordLog, "startTime" | "title">;
 }
 
 export interface ResSave extends BaseResponse {}

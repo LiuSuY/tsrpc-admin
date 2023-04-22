@@ -1,7 +1,7 @@
 import { ObjectId } from "mongodb";
 import * as uuid from "uuid";
-import { Global } from "./Global";
-import { DbUser } from "../shared/db/DbUser";
+import { Global } from "../Global";
+import { DbUser } from "../models/DbUser"
 import { CurrentUser } from "../shared/models/CurrentUser";
 
 const SSO_VALID_TIME = 86400000 * 7;
@@ -53,8 +53,8 @@ export class UserUtil {
 
     // Return parsed CurrentUser
     return {
-      uid: user._id,
-      username: user.userName,
+      uid: user._id.toHexString(),
+      userName: user.userName,
       roles: [user.role],
     };
   }

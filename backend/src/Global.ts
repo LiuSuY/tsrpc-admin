@@ -1,7 +1,7 @@
 import { Collection, Db, MongoClient, OptionalId } from "mongodb";
 import { Logger } from "tsrpc";
-import { DbRecordLog } from "../shared/db/DbRecordLog";
-import { dbConfig } from "./dbConfig";
+import { dbConfig } from "./config/dbConfig";
+import { RecordLog } from "./shared/models/RecordLog";
 
 export class Global {
   static db: Db;
@@ -13,11 +13,13 @@ export class Global {
     this.db = client.db();
   }
 
-  static collection<T extends keyof DbCollectionType>(col: T): Collection<OptionalId<DbCollectionType[T]>> {
+  static collection<T extends keyof DbCollectionType>(
+    col: T
+  ): Collection<OptionalId<DbCollectionType[T]>> {
     return this.db.collection(col);
-}
+  }
 }
 
 export interface DbCollectionType {
-  RecordLog: DbRecordLog;
+  RecordLog: RecordLog;
 }

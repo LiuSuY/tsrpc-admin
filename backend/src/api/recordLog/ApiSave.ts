@@ -1,7 +1,6 @@
-import { ObjectId } from "mongodb";
 import { ApiCall } from "tsrpc";
-import { Global } from "../../models/Global";
-import { DbRecordLog } from "../../shared/db/DbRecordLog";
+import { Global } from "../../Global";
+import { RecordLog } from "../../shared/models/RecordLog";
 import { ReqSave, ResSave } from "../../shared/protocols/recordLog/PtlSave";
 
 export default async function (call: ApiCall<ReqSave, ResSave>) {
@@ -12,7 +11,7 @@ export default async function (call: ApiCall<ReqSave, ResSave>) {
   }
 
   let rs = await Global.db
-    .collection<Omit<DbRecordLog, "endTime">>("RecordLog")
+    .collection<Omit<RecordLog, "endTime">>("RecordLog")
     .insertOne({
       title,
       startTime,
