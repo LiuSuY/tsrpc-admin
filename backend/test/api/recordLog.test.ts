@@ -1,16 +1,16 @@
-import assert from "assert";
-import { before } from "mocha";
+import { expect, describe, beforeAll, afterAll, it, test } from "@jest/globals";
 import { HttpClient, TsrpcError } from "tsrpc";
 import { BaseResponse } from "../../src/shared/protocols/base";
 import { serviceProto } from "../../src/shared/protocols/serviceProto";
 
-describe("recordLog", async function () {
+describe("recordLog", function () {
   let client = new HttpClient(serviceProto, {
     server: "http://127.0.0.1:3000",
     logger: console,
   });
   let ssoToken: string;
-  before(async () => {
+  let isConnected: boolean = true;
+  beforeAll(async () => {
     client.flows.postApiReturnFlow.push((v) => {
       if (v.return.isSucc) {
         let res = v.return.res as BaseResponse;
@@ -30,17 +30,25 @@ describe("recordLog", async function () {
       return v;
     });
 
-    await client.callApi("user/Login", {
-      userName: "admin",
-      passWord: "admin",
-    });
+    await client
+      .callApi("user/Login", {
+        userName: "admin",
+        passWord: "admin",
+      })
+      .then((e) => {
+        if (e.err?.code == "ECONNREFUSED") {
+          isConnected = false;
+        }
+      });
+  });
+
+  beforeEach((fn) => {
   });
 
   it("ApiGet", async function () {
     let ret = await client.callApi("recordLog/Get", {});
-    assert.strictEqual(ret.isSucc, true);
+    expect(ret.isSucc).resolves.toBe(true);
   });
-
   it("ApiSave", async function () {
     let ret = await client.callApi("recordLog/Save", {
       recordLog: {
@@ -48,7 +56,7 @@ describe("recordLog", async function () {
         startTime: new Date(),
       },
     });
-    assert.deepStrictEqual(ret, {
+    expect(ret).toStrictEqual({
       isSucc: true,
       res: {},
     });
@@ -60,9 +68,13 @@ describe("recordLog", async function () {
         startTime: new Date(),
       },
     });
-    assert.deepStrictEqual(ret, {
+    expect(ret).toStrictEqual({
       isSucc: false,
-      err: new TsrpcError('title is empty'),
+      err: new TsrpcError("title is empty"),
     });
+  });
+
+  afterAll((done) => {
+    done();
   });
 });

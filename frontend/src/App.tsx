@@ -93,7 +93,7 @@ const App = () => {
         <Form
             form={form}
             autoComplete="off" className="text-center m-4">
-            <FormItem label="Username"
+            <FormItem label="username"
                 name="username"
                 rules={[{ required: true, message: 'Please input your username!' }]}>
                 <Input ></Input>
