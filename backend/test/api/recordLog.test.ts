@@ -42,8 +42,6 @@ describe("recordLog", function () {
       });
   });
 
-  beforeEach((fn) => {
-  });
 
   it("ApiGet", async function () {
     let ret = await client.callApi("recordLog/Get", {});
