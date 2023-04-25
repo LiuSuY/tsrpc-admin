@@ -1,0 +1,138 @@
+import { Button, Form, Input, message } from "antd";
+import FormItem from "antd/es/form/FormItem";
+import { useEffect, useState } from "react";
+import { client } from "./client";
+import { RecordLog } from "./shared/models/RecordLog";
+import Login from "./pages/login";
+
+
+const App = () => {
+    const [recordLog, setRecordLog] = useState<Array<Partial<Pick<RecordLog, 'endTime'>> & Omit<RecordLog, 'endTime'>>>();
+    const [title, setTitle] = useState<string>('');
+    const [form] = Form.useForm();
+    const handleGetRecordLog = () => {
+        if (window.localStorage.getItem('SSO_TOKEN')) {
+            client.callApi('recordLog/Get', {}).then((res) => {
+                if (res.isSucc) {
+                    setRecordLog(res.res.records)
+                } else {
+                    message.error(res.err.message)
+                }
+            })
+        }
+    }
+    useEffect(() => {
+        handleGetRecordLog();
+    }, []);
+    const handleStart = () => {
+        client.callApi('recordLog/Save', {
+            recordLog: {
+                title,
+                startTime: new Date,
+            }
+        }).then((res) => {
+            if (res.isSucc) {
+                message.success('签到成功');
+                handleGetRecordLog();
+            } else {
+                message.error(res.err.message)
+            }
+        })
+    };
+    const handleStop = () => {
+        client.callApi('recordLog/Update', {
+            recordLog: {
+                _id: recordLog![0]._id
+            }
+        }).then(res => {
+            if (res.isSucc) {
+                message.success('签退成功');
+                handleGetRecordLog();
+            } else {
+                message.error(res.err.message)
+            }
+        })
+    }
+
+    const handleLogin = () => {
+        form.validateFields().then(values => {
+            if (values) {
+                const { username: userName, password: passWord } = values;
+                client.callApi('user/Login', {
+                    userName,
+                    passWord
+                }).then((res) => {
+                    if (res.isSucc) {
+                        message.success('登录成功');
+                        handleGetRecordLog();
+                    } else {
+                        message.error(res.err.message)
+                    }
+                })
+            }
+
+            
+        })
+
+    }
+
+
+    const handleLogout = () => {
+        client.callApi('user/Logout', {}).then((res) => {
+            if (res.isSucc) {
+                message.success('退出成功');
+                handleGetRecordLog();
+            } else {
+                message.error(res.err.message)
+            }
+        })
+    }
+
+    const handleReset = () => {
+        form.resetFields();
+    }
+
+    return (<div>
+        <Login/>
+        {/* <Form
+            form={form}
+            autoComplete="off" className="text-center m-4">
+            <FormItem label="username"
+                name="username"
+                rules={[{ required: true, message: 'Please input your username!' }]}>
+                <Input ></Input>
+            </FormItem>
+            <FormItem label="password" name="password" rules={[{ required: true, message: 'Please input your password!' }]}>
+                <Input.Password></Input.Password>
+            </FormItem>
+            <FormItem>
+                <Button type="primary" onClick={handleLogin}>登录</Button>
+                <Button type="primary" onClick={handleReset}>reset</Button>
+                <Button type="primary" onClick={handleLogout}>退出</Button>
+            </FormItem>
+        </Form>
+        <div className="text-center pt-10">学习记录</div>
+        <div className="p-4 h-40 overflow-auto">
+            {recordLog && recordLog.map((item) => {
+                return <div key={item._id}>
+                    <div className=" mt-4 mb-4"><span>学习标题:</span><span>{item.title}</span></div>
+                    <div className=" mt-4 mb-4"><span>学习开始时间:</span><span >{item.startTime.toLocaleString()}</span></div>
+                    <div className=" mt-4 mb-4"><span>学习结束时间:</span><span >{item.endTime ? item.endTime.toLocaleString() : ''}</span></div>
+                </div>
+            })}
+        </div>
+
+        <Form className="text-center m-4">
+            <FormItem label="学习标题">
+                <Input placeholder="请输入学习标题" value={title} onChange={(e) => setTitle(e.target.value)}></Input>
+            </FormItem>
+            <FormItem>
+
+                <Button type="primary" onClick={handleStart}>签到</Button>
+                <Button type="primary" onClick={handleStop}>签退</Button>
+            </FormItem>
+        </Form> */}
+    </div>)
+}
+
+export default App;

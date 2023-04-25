@@ -1,52 +1,67 @@
-import { Button, Form, Input } from "antd";
-import FormItem from "antd/es/form/FormItem";
-import { client } from "src/client";
-import { setStatus } from "src/test";
+import { LockOutlined, UserOutlined } from '@ant-design/icons';
+import { Button, Checkbox, Form, Input, message } from 'antd';
+import { client } from 'src/client';
 
 const Login = () => {
-    const handleLogin = async () => {
-        // todo 登录 
-        // let ret = await client.callApi('user/Login', {
-        //     username: 'Admin',
-        //     password: '123456'
-        // });
+    const [form] = Form.useForm();
+    const handleLogin = () => {
+        form.validateFields().then(values => {
+            if (values) {
+                const { username: userName, password: passWord } = values;
+                client.callApi('user/Login', {
+                    userName,
+                    passWord
+                }).then((res) => {
+                    if (res.isSucc) {
+                        message.success('登录成功');
+                    } else {
+                        message.error(res.err.message)
+                    }
+                })
+            }
+        })
 
-        // if (!ret.isSucc) {
-        //     alert(ret.err.message);
-        //     return;
-        // }
-
-        // localStorage.setItem('LoginedRole', 'Admin');
-        // setStatus(true);
     }
-    const handleLoout = async () => {
-        // // todo 登录 
-        // let ret = await client.callApi('user/Logout', {});
+    return (
+        <div className='h-screen w-screen flex items-center justify-center'>
+            <div className='w-80'>
+                <div className='py-8 text-center'>灵图考试系统登录</div>
+                <Form form={form}>
+                    <Form.Item
+                        name="username"
+                        label="username"
+                        rules={[
+                            {
+                                required: true,
+                                message: '请输入用户名!',
+                            },
+                        ]}
+                    >
+                        <Input placeholder={'用户名: admin'} prefix={<UserOutlined className={'prefixIcon'} />}></Input>
+                    </Form.Item>
+                    <Form.Item rules={[
+                        {
+                            required: true,
+                            message: '请输入密码！',
+                        },
+                    ]} name="password" label="password">
+                        <Input.Password placeholder={'密码: admin'} prefix={<LockOutlined className={'prefixIcon'} />}></Input.Password>
+                    </Form.Item>
 
-        // if (!ret.isSucc) {
-        //     alert(ret.err.message);
-        //     return;
-        // }
 
-        // setStatus(false);
-    }
-    return <div>
-        <Form >
-            <FormItem label="用户名">
-                <Input placeholder="请输入用户名"></Input>
-            </FormItem>
-            <FormItem label="密码">
-                <Input placeholder="请输入密码"></Input>
-            </FormItem>
-            <FormItem className="text-center">
-                <Button type="primary" onClick={handleLogin}>login</Button>
-                <Button type="primary" onClick={handleLoout}>logout</Button>
-                <Button>cancel</Button>
-            </FormItem>
-        </Form>
-
-
-    </div>
-}
+                    <div>
+                        <Form.Item noStyle name="autoLogin">
+                            <Checkbox>自动登录</Checkbox>
+                        </Form.Item>
+                        <Button type='link' className='float-right px-0'>忘记密码</Button>
+                    </div>
+                    <div className='py-4'>
+                        <Button type="primary" block onClick={handleLogin}> login </Button>
+                    </div>
+                </Form>
+            </div>
+        </div>
+    );
+};
 
 export default Login;
